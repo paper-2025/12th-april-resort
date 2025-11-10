@@ -1,0 +1,30 @@
+{
+  "Restaurant": [
+    { "id": "1", "name": "Bread / Egg / Coffee / Tea" },
+    { "id": "2", "name": "Oat Meal" },
+    { "id": "3", "name": "Noodles & Egg" },
+    { "id": "4", "name": "Chicken & Chips" },
+    { "id": "5", "name": "Chips & Eggs" },
+    { "id": "6", "name": "Rice Stew Chicken / Fish" },
+    { "id": "7", "name": "Vegetable Salad" },
+    { "id": "8", "name": "Jollof Rice & Chicken / Fish" },
+    { "id": "9", "name": "Fried Rice & Chicken" },
+    { "id": "10", "name": "Rice / Goat Meat / Beef" },
+    { "id": "11", "name": "Spaghetti Goat / Beef" },
+    { "id": "12", "name": "Spaghetti Fish / Chicken" },
+    { "id": "13", "name": "Yam & Egg Sauce" },
+    { "id": "14", "name": "Yam Portage Chicken / Fish" },
+    { "id": "15", "name": "Yam Portage Goat / Beef" },
+    { "id": "16", "name": "Garri / Semo / Pounded Yam / Wheat + Soup" },
+    { "id": "17", "name": "Garri / Semo / Wheat + Egusi / Ogbono / Bitterleaf Soup" },
+    { "id": "18", "name": "Peppered Gizzard" },
+    { "id": "19", "name": "Peppered Meat" },
+    { "id": "20", "name": "Isi Ewu (Goat Head)" },
+    { "id": "21", "name": "Goat Meat Pepper Soup" },
+    { "id": "22", "name": "Fresh Fish Pepper Soup" },
+    { "id": "23", "name": "Assorted Pepper Soup" },
+    { "id": "24", "name": "Cowtail Pepper Soup" },
+    { "id": "25", "name": "Grilled Fish" },
+    { "id": "26", "name": "Peppered Chicken / Pepper Soup" }
+  ]
+}

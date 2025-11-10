@@ -1,0 +1,174 @@
+[
+  {
+    "id": "1202",
+    "status": "Occupied",
+    "booking": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "days": 2,
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    },
+    "guest": {
+      "name": "Alfred Desmond Alfred Desmond",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "checkIn": "2025-11-10",
+      "checkOut": "2025-11-12"
+    }
+  },
+  {
+    "id": "1203",
+    "status": "Available",
+    "booking": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "days": 2,
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    },
+    "guest": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    }
+  },
+  {
+    "id": "1204",
+    "status": "Available",
+    "guest": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    }
+  },
+  {
+    "id": "1205",
+    "status": "Available",
+    "booking": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "days": 2,
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    },
+    "guest": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "checkIn": "2025-11-10",
+      "checkOut": "2025-11-10"
+    }
+  },
+  {
+    "id": "1206",
+    "status": "Available"
+  },
+  {
+    "id": "1207",
+    "status": "Available"
+  },
+  {
+    "id": "1208",
+    "status": "Available"
+  },
+  {
+    "id": "1209",
+    "status": "Available"
+  },
+  {
+    "id": "1210",
+    "status": "Available"
+  },
+  {
+    "id": "1211",
+    "status": "Available"
+  },
+  {
+    "id": "1212",
+    "status": "Available"
+  },
+  {
+    "id": "1213",
+    "status": "Available"
+  },
+  {
+    "id": "1214",
+    "status": "Available"
+  },
+  {
+    "id": "1215",
+    "status": "Available"
+  },
+  {
+    "id": "1216",
+    "status": "Available"
+  },
+  {
+    "id": "1217",
+    "status": "Available"
+  },
+  {
+    "id": "1218",
+    "status": "Available"
+  },
+  {
+    "id": "1219",
+    "status": "Available"
+  },
+  {
+    "id": "1220",
+    "status": "Available"
+  },
+  {
+    "id": "1221",
+    "status": "Available"
+  },
+  {
+    "id": "1222",
+    "status": "Available"
+  },
+  {
+    "id": "1223",
+    "status": "Available"
+  },
+  {
+    "id": "1224",
+    "status": "Available"
+  },
+  {
+    "id": "1225",
+    "status": "Available"
+  },
+  {
+    "id": "1226",
+    "status": "Available"
+  },
+  {
+    "id": "1227",
+    "status": "Available"
+  },
+  {
+    "id": "S1",
+    "status": "Available"
+  },
+  {
+    "id": "S2",
+    "status": "Available",
+    "booking": {
+      "name": "Desmond Alfred",
+      "phone": "08113036610",
+      "address": "dbjbasfiasj",
+      "days": 2,
+      "checkIn": "2025-11-08",
+      "checkOut": "2025-11-10"
+    }
+  }
+]

@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-heading: ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Inter", "Roboto", "Helvetica Neue", sans-serif;
+}
+
+body {
+  @apply bg-brandBg text-white;
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+header,
+footer,
+.need-anything,
+.static-text {
+  user-select: none;
+  cursor: default;
+}
+.toast-success {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+}
+
+.toast-error {
+  background: linear-gradient(90deg, #f87171, #ef4444);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
