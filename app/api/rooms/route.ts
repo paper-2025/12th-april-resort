@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import nodemailer from "nodemailer";
+import { getRedis } from "@/lib/redis";
 
 const roomsFile = path.join(process.cwd(), "data", "rooms.json");
 

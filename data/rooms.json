@@ -1,7 +1,7 @@
 [
   {
     "id": "1202",
-    "status": "Occupied",
+    "status": "Under Maintenance",
     "booking": {
       "name": "Desmond Alfred",
       "phone": "08113036610",
@@ -20,7 +20,7 @@
   },
   {
     "id": "1203",
-    "status": "Available",
+    "status": "Pending",
     "booking": {
       "name": "Desmond Alfred",
       "phone": "08113036610",
@@ -30,11 +30,11 @@
       "checkOut": "2025-11-10"
     },
     "guest": {
-      "name": "Desmond Alfred",
+      "name": "Alfred Desmond Alfred Desmond",
       "phone": "08113036610",
       "address": "dbjbasfiasj",
-      "checkIn": "2025-11-08",
-      "checkOut": "2025-11-10"
+      "checkIn": "2025-11-12",
+      "checkOut": "2025-11-12"
     }
   },
   {
