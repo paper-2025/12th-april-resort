@@ -1,27 +1,38 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function PoolPage() {
-  const [menu, setMenu] = useState<any[]>([]);
-  const [drinks, setDrinks] = useState<any[]>([]);
+  const [restaurant, setRestaurant] = useState<any[]>([]);
+  const [bar, setBar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // -----------------------------
+  // Load Restaurant + Bar Menus
+  // -----------------------------
   useEffect(() => {
     fetch("/api/menu")
       .then((res) => res.json())
       .then((data) => {
-        setMenu(data.menus.Restaurant || []);
-        setDrinks(data.menus.Bar || []);
+        setRestaurant(data.menus.Restaurant || []);
+        setBar(data.menus.Bar || []);
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   if (loading)
-    return <p className="text-center text-gray-600 mt-10">Loading Pool Menu...</p>;
+    return (
+      <p className="text-center text-gray-600 mt-10">
+        Loading Pool Menu...
+      </p>
+    );
 
+  // -----------------------------
+  // Swimming Rates (Fixed)
+  // -----------------------------
   const swimmingRates = [
-    { type: "Adult", price: 3000, duration: "2 hours" },
-    { type: "Children (under 10)", price: 2000, duration: "2 hours" },
+    { type: "Per Person", price: 2000, duration: "All Day" },
   ];
 
   return (
@@ -31,37 +42,62 @@ export default function PoolPage() {
           🏊 12th April Resort Pool & Snack Bar
         </h1>
 
+        {/* ------------------- Swimming Rates ------------------- */}
         <div className="bg-white rounded-2xl p-6 shadow-lg mb-10">
-          <h2 className="text-2xl font-bold text-[#006d8e] mb-4">Swimming Rates</h2>
+          <h2 className="text-2xl font-bold text-[#006d8e] mb-4">
+            Swimming Rates
+          </h2>
+
           <ul>
             {swimmingRates.map((r) => (
-              <li key={r.type} className="flex justify-between py-2 border-b border-gray-100">
+              <li
+                key={r.type}
+                className="flex justify-between py-3 border-b border-gray-200"
+              >
                 <span className="font-semibold">{r.type}</span>
-                <span>₦{r.price.toLocaleString()} / {r.duration}</span>
+                <span className="font-bold">
+                  ₦{r.price.toLocaleString()} / {r.duration}
+                </span>
               </li>
             ))}
           </ul>
         </div>
 
-        <h2 className="text-2xl font-bold mb-3 text-[#004c6d]">🍽 Food Menu</h2>
+        {/* ------------------- Food Menu ------------------- */}
+        <h2 className="text-2xl font-bold mb-3 text-[#004c6d]">
+          🍽 Food Menu
+        </h2>
         <div className="grid md:grid-cols-2 gap-6 mb-10">
-          {menu.map((item) => (
-            <div key={item.id} className="bg-white p-4 rounded-lg shadow hover:shadow-md">
+          {restaurant.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+            >
               <div className="flex justify-between">
-                <h3>{item.name}</h3>
-                <span className="font-bold text-[#005d7a]">₦{Number(item.price || 0).toLocaleString()}</span>
+                <h3 className="font-medium">{item.name}</h3>
+                <span className="text-[#005d7a] font-bold">
+                  ₦{Number(item.price || 0).toLocaleString()}
+                </span>
               </div>
             </div>
           ))}
         </div>
 
-        <h2 className="text-2xl font-bold mb-3 text-[#004c6d]">🍹 Drinks Menu</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {drinks.map((item) => (
-            <div key={item.id} className="bg-white p-4 rounded-lg shadow hover:shadow-md">
+        {/* ------------------- Drinks Menu ------------------- */}
+        <h2 className="text-2xl font-bold mb-3 text-[#004c6d]">
+          🍹 Drinks Menu
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          {bar.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+            >
               <div className="flex justify-between">
-                <h3>{item.name}</h3>
-                <span className="font-bold text-[#005d7a]">₦{Number(item.restaurant || 0).toLocaleString()}</span>
+                <h3 className="font-medium">{item.name}</h3>
+                <span className="text-[#005d7a] font-bold">
+                  ₦{Number(item.restaurant || 0).toLocaleString()}
+                </span>
               </div>
             </div>
           ))}
