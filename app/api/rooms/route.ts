@@ -27,11 +27,24 @@ type Room = {
 };
 
 // --------------------- UPSTASH SETTINGS -------------------
-const UPS_URL = process.env.UPSTASH_REDIS_REST_URL!;
-const UPS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN!;
+const UPS_URL = process.env.UPSTASH_REDIS_REST_URL || "";
+const UPS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || "";
+
+// ✅ ENV ASSERT (prevents "undefined/set/...")
+function assertUpstashEnv() {
+  if (!UPS_URL || !UPS_TOKEN) {
+    throw new Error(
+      `Missing Upstash env vars.
+UPSTASH_REDIS_REST_URL? ${Boolean(process.env.UPSTASH_REDIS_REST_URL)}
+UPSTASH_REDIS_REST_TOKEN? ${Boolean(process.env.UPSTASH_REDIS_REST_TOKEN)}`
+    );
+  }
+}
 
 // --------------------- REDIS HELPERS -------------------
 async function upstashGet(key: string): Promise<string | null> {
+  assertUpstashEnv();
+
   try {
     const res = await fetch(`${UPS_URL}/get/${key}`, {
       headers: { Authorization: `Bearer ${UPS_TOKEN}` },
@@ -41,16 +54,31 @@ async function upstashGet(key: string): Promise<string | null> {
     if (!res.ok) return null;
     const data = await res.json();
     return data.result ?? null;
-  } catch {
+  } catch (e: any) {
+    // Keep it null so seed can happen, but log for debugging
+    console.error("Upstash GET failed:", e?.message || e);
     return null;
   }
 }
 
 async function upstashSet(key: string, value: string): Promise<void> {
-  await fetch(`${UPS_URL}/set/${key}/${encodeURIComponent(value)}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${UPS_TOKEN}` },
-  });
+  assertUpstashEnv();
+
+  try {
+    const res = await fetch(`${UPS_URL}/set/${key}/${encodeURIComponent(value)}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${UPS_TOKEN}` },
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Upstash SET failed (${res.status}): ${text}`);
+    }
+  } catch (e: any) {
+    console.error("Upstash SET failed:", e?.message || e);
+    // Throw so your route returns JSON with a clear error
+    throw new Error(e?.message || "Upstash SET failed");
+  }
 }
 
 // --------------------- ROOM TYPE HELPERS -------------------
@@ -158,8 +186,15 @@ async function sendEmail(to: string, subject: string, html: string) {
 //  GET — return all rooms
 // ======================================================
 export async function GET() {
-  const rooms = await getRooms();
-  return NextResponse.json({ success: true, rooms });
+  try {
+    const rooms = await getRooms();
+    return NextResponse.json({ success: true, rooms });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err?.message || "Failed to fetch rooms" },
+      { status: 500 }
+    );
+  }
 }
 
 // ======================================================
@@ -174,22 +209,22 @@ export async function POST(req: Request) {
     const room = rooms.find((r) => r.id === String(roomId));
 
     if (!room)
-      return NextResponse.json({ success: false, message: "Room not found" });
+      return NextResponse.json({ success: false, message: "Room not found" }, { status: 404 });
 
     if (room.status !== "Available") {
-      return NextResponse.json({
-        success: false,
-        message: `Room is ${room.status}`,
-      });
+      return NextResponse.json(
+        { success: false, message: `Room is ${room.status}` },
+        { status: 400 }
+      );
     }
 
     // Check-in must be today
     const today = new Date().toISOString().split("T")[0];
     if (checkIn !== today) {
-      return NextResponse.json({
-        success: false,
-        message: `Check-in must be today (${today})`,
-      });
+      return NextResponse.json(
+        { success: false, message: `Check-in must be today (${today})` },
+        { status: 400 }
+      );
     }
 
     room.status = "Pending";
@@ -211,11 +246,14 @@ export async function POST(req: Request) {
       message: "Request sent for verification",
     });
   } catch (err: any) {
-    return NextResponse.json({
-      success: false,
-      message: "Booking failed",
-      error: err.message,
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Booking failed",
+        error: err?.message || String(err),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -230,7 +268,7 @@ export async function PATCH(req: Request) {
     const room = rooms.find((r) => r.id === String(roomId));
 
     if (!room)
-      return NextResponse.json({ success: false, message: "Room not found" });
+      return NextResponse.json({ success: false, message: "Room not found" }, { status: 404 });
 
     const previous = room.status;
     room.status = status;
@@ -267,10 +305,13 @@ export async function PATCH(req: Request) {
       room,
     });
   } catch (err: any) {
-    return NextResponse.json({
-      success: false,
-      message: "Update failed",
-      error: err.message,
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Update failed",
+        error: err?.message || String(err),
+      },
+      { status: 500 }
+    );
   }
 }
