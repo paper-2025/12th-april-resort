@@ -27,16 +27,28 @@ type Room = {
 };
 
 // --------------------- UPSTASH SETTINGS -------------------
-const UPS_URL = process.env.UPSTASH_REDIS_REST_URL || "";
-const UPS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || "";
+// ✅ Supports BOTH KV_* and UPSTASH_* env names
+const UPS_URL =
+  process.env.KV_REST_API_URL ||
+  process.env.UPSTASH_REDIS_REST_URL ||
+  process.env.UPSTASH_REDIS_REST_ENDPOINT ||
+  "";
+
+const UPS_TOKEN =
+  process.env.KV_REST_API_TOKEN ||
+  process.env.UPSTASH_REDIS_REST_TOKEN ||
+  "";
 
 // ✅ ENV ASSERT (prevents "undefined/set/...")
 function assertUpstashEnv() {
   if (!UPS_URL || !UPS_TOKEN) {
     throw new Error(
       `Missing Upstash env vars.
+KV_REST_API_URL? ${Boolean(process.env.KV_REST_API_URL)}
+KV_REST_API_TOKEN? ${Boolean(process.env.KV_REST_API_TOKEN)}
 UPSTASH_REDIS_REST_URL? ${Boolean(process.env.UPSTASH_REDIS_REST_URL)}
-UPSTASH_REDIS_REST_TOKEN? ${Boolean(process.env.UPSTASH_REDIS_REST_TOKEN)}`
+UPSTASH_REDIS_REST_TOKEN? ${Boolean(process.env.UPSTASH_REDIS_REST_TOKEN)}
+UPSTASH_REDIS_REST_ENDPOINT? ${Boolean(process.env.UPSTASH_REDIS_REST_ENDPOINT)}`
     );
   }
 }
@@ -55,7 +67,6 @@ async function upstashGet(key: string): Promise<string | null> {
     const data = await res.json();
     return data.result ?? null;
   } catch (e: any) {
-    // Keep it null so seed can happen, but log for debugging
     console.error("Upstash GET failed:", e?.message || e);
     return null;
   }
@@ -76,7 +87,6 @@ async function upstashSet(key: string, value: string): Promise<void> {
     }
   } catch (e: any) {
     console.error("Upstash SET failed:", e?.message || e);
-    // Throw so your route returns JSON with a clear error
     throw new Error(e?.message || "Upstash SET failed");
   }
 }
@@ -95,7 +105,7 @@ function getRoomPrices(id: string) {
   if (doubleRooms.includes(id)) {
     return { weekday: 24000, weekend: 20000 };
   }
-  return { weekday: 20000, weekend: 18000 }; // single rooms
+  return { weekday: 20000, weekend: 18000 };
 }
 
 // --------------------- SEED CLEAN ROOMS -------------------
@@ -112,7 +122,6 @@ async function seedRooms(): Promise<Room[]> {
     });
   }
 
-  // Suites
   ["S1", "S2"].forEach((id) =>
     rooms.push({
       id,
@@ -130,15 +139,14 @@ async function seedRooms(): Promise<Room[]> {
 function validateRooms(data: any): data is Room[] {
   if (!Array.isArray(data)) return false;
 
-  return data.every((room) => {
-    return (
+  return data.every(
+    (room) =>
       typeof room.id === "string" &&
       typeof room.status === "string" &&
       room.prices &&
       typeof room.prices.weekday === "number" &&
       typeof room.prices.weekend === "number"
-    );
-  });
+  );
 }
 
 // --------------------- GET ROOMS -------------------
@@ -209,7 +217,10 @@ export async function POST(req: Request) {
     const room = rooms.find((r) => r.id === String(roomId));
 
     if (!room)
-      return NextResponse.json({ success: false, message: "Room not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: "Room not found" },
+        { status: 404 }
+      );
 
     if (room.status !== "Available") {
       return NextResponse.json(
@@ -218,7 +229,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check-in must be today
     const today = new Date().toISOString().split("T")[0];
     if (checkIn !== today) {
       return NextResponse.json(
@@ -268,12 +278,14 @@ export async function PATCH(req: Request) {
     const room = rooms.find((r) => r.id === String(roomId));
 
     if (!room)
-      return NextResponse.json({ success: false, message: "Room not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: "Room not found" },
+        { status: 404 }
+      );
 
     const previous = room.status;
     room.status = status;
 
-    // Confirm
     if (previous === "Pending" && status === "Occupied" && room.guest) {
       await sendEmail(
         room.guest.email,
@@ -282,7 +294,6 @@ export async function PATCH(req: Request) {
       );
     }
 
-    // Reject
     if (previous === "Pending" && status === "Available" && room.guest) {
       await sendEmail(
         room.guest.email,
@@ -292,7 +303,6 @@ export async function PATCH(req: Request) {
       room.guest = undefined;
     }
 
-    // Maintenance → Available
     if (previous === "Under Maintenance" && status === "Available") {
       room.guest = undefined;
     }
